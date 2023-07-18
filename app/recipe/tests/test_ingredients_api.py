@@ -10,7 +10,7 @@ from rest_framework.test import APIClient
 
 from core.models import Ingredient
 
-from recipe.serializers import IngredientsSerializer
+from recipe.serializers import IngredientSerializer
 
 
 INGREDIENTS_URL = reverse('recipe:ingredient-list')
@@ -39,7 +39,7 @@ class PrivateIngredientsApiTestS(TestCase):
     def setUp(self):
         self.user = create_user()
         self.client = APIClient()
-        self.client.force_authenticated(self.user)
+        self.client.force_authenticate(self.user)
 
     def test_retrieve_ingredients(self):
         """Test retrieving a list of ingredients."""
@@ -49,7 +49,7 @@ class PrivateIngredientsApiTestS(TestCase):
         res = self.client.get(INGREDIENTS_URL)
 
         ingredients = Ingredient.objects.all().order_by('-name')
-        serializer = IngredientsSerializer(ingredients, many=True)
+        serializer = IngredientSerializer(ingredients, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
